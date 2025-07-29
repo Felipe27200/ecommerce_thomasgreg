@@ -1,0 +1,23 @@
+# Let the project modify the database
+spring.jpa.hibernate.ddl-auto=update
+
+spring.application.name=ecommerce
+
+# Database Connection
+databaseName=accounting_system
+
+spring.datasource.url=jdbc:mysql://localhost:3307/${databaseName}
+spring.datasource.username=
+spring.datasource.password=
+
+# Show queries in the logs
+spring.jpa.show-sql=true
+
+# Code SQL with indentation
+spring.jpa.properties.hibernate.format_sql=true
+
+# ROUTE PREFIX
+apiPrefix=api
+
+logging.level.org.springframwork.security=DEBUG
+
