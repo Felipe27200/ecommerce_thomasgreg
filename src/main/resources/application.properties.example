@@ -21,3 +21,5 @@ apiPrefix=api
 
 logging.level.org.springframwork.security=DEBUG
 
+rsa.private-key=classpath:certs/private.pem
+rsa.public-key=classpath:certs/public.pem
