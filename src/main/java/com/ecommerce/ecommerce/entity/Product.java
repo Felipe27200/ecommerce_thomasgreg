@@ -1,6 +1,9 @@
 package com.ecommerce.ecommerce.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
@@ -13,8 +16,12 @@ public class Product
     @Column(name = "product_id")
     private Long id;
 
+    @NotBlank(message = "The product name is required")
     @Column(nullable = false)
     private String name;
+
+    @Min(value = 1, message = "The price must be greater than zero")
+    @NotNull(message = "The price is required")
     @Column(nullable = false)
     private BigDecimal price;
 

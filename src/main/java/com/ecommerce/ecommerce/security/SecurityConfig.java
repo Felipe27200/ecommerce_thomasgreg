@@ -82,6 +82,11 @@ public class SecurityConfig
                     .requestMatchers(HttpMethod.GET, "/api/ok_prueba").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/signup").permitAll()
+
+                    .requestMatchers(HttpMethod.POST, "/api/products/create").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/api/products/{id}").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/api/products/{id}").hasRole("ADMIN")
+
                     .anyRequest().authenticated();
             })
             .oauth2ResourceServer((oauth2) -> oauth2
