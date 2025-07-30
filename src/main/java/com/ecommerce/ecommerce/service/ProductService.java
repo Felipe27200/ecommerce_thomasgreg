@@ -40,10 +40,11 @@ public class ProductService
             throw new GeneralException("The product id must be greater than zero");
 
         Optional<Product> product = this.productRepository.findById(id);
+
         if (product.isEmpty())
             throw new NotFoundException("Product with id " + id + " not found");
 
-        return this.productRepository.findById(id).get();
+        return product.get();
     }
 
     public List<Product> findAll()
@@ -61,7 +62,7 @@ public class ProductService
 
         Product checkName = this.productRepository.findByName(product.getName());
 
-        if (checkName != null && !checkName.getId().equals(product.getId()))
+        if (checkName != null && !checkName.getId().equals(oldProduct.getId()))
             throw new GeneralException("There is another Product with name '" + product.getName() + "'");
 
         oldProduct.setName(product.getName());

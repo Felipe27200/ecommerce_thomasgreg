@@ -27,11 +27,7 @@ public class ProductController
     @PostMapping("/create")
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product)
     {
-        if (product.getName().trim().isEmpty())
-            throw new GeneralException("Product name cannot be empty");
-
-        if (product.getPrice().compareTo(BigDecimal.ZERO) <= 0)
-            throw new GeneralException("Price cannot be zero");
+    	this.validateProduct(product);
 
         Product newProduct = this.productService.save(product);
 
@@ -47,6 +43,8 @@ public class ProductController
     @PutMapping("/{id}")
     public ResponseEntity<Product> update(@Valid @RequestBody Product product, @PathVariable Long id)
     {
+    	this.validateProduct(product);
+
         return new ResponseEntity<>(this.productService.update(product, id), HttpStatus.OK);
     }
 
@@ -64,6 +62,16 @@ public class ProductController
         BasicResponse basicResponse = new BasicResponse("successful", "The product with name '" + result + "' was deleted successfully");
 
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+    }
+    
+    private void validateProduct(Product product)
+    {
+        if (product.getName().trim().isEmpty())
+            throw new GeneralException("Product name cannot be empty");
+
+        if (product.getPrice().compareTo(BigDecimal.ZERO) <= 0)
+            throw new GeneralException("Price cannot be zero");
+
     }
 
 }
