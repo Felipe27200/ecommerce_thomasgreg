@@ -14,7 +14,7 @@ public class Stock
     @Column(name = "available_quantity")
     private Long availableQuantity;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(
         name = "product_id",
         referencedColumnName = "product_id",

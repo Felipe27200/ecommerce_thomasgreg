@@ -73,7 +73,7 @@ public class StockService
         if (oldStock == null)
             throw new NotFoundException("Stock with id " + id + " not found");
         
-       Product product = this.productService.findById(stock.getProduct().getId());
+       Product product = this.productService.findById(oldStock.getProduct().getId());
        
        if (!product.getId().equals(oldStock.getProduct().getId()))
     	   throw new GeneralException("The stock does not belong to product '" + product.getName() + "'");

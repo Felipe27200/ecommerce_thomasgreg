@@ -1,6 +1,7 @@
 package com.ecommerce.ecommerce.controller;
 
 import com.ecommerce.ecommerce.dto.stock.CreateStockDTO;
+import com.ecommerce.ecommerce.dto.stock.UpdateStockDTO;
 import com.ecommerce.ecommerce.entity.Product;
 import com.ecommerce.ecommerce.entity.Stock;
 import com.ecommerce.ecommerce.service.ProductService;
@@ -47,8 +48,12 @@ public class StockController
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Stock> update(@Valid @RequestBody Stock stock, @PathVariable Long id)
+    public ResponseEntity<Stock> update(@Valid @RequestBody UpdateStockDTO stockUpdate, @PathVariable Long id)
     {
+        Stock stock = new Stock();
+
+        stock.setAvailableQuantity(stockUpdate.getAvailableQuantity());
+
         return new ResponseEntity<>(this.stockService.update(stock, id), HttpStatus.OK);
     }
 
