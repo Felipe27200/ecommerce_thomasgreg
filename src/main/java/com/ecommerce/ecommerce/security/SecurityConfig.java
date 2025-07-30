@@ -87,6 +87,12 @@ public class SecurityConfig
                     .requestMatchers(HttpMethod.PUT, "/api/products/{id}").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/api/products/{id}").hasRole("ADMIN")
 
+                    .requestMatchers(HttpMethod.POST, "/api/stocks/create").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/api/stocks/{id}").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/api/stocks/{id}").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/api/stocks/product/{id}").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/api/stocks/").hasRole("ADMIN")
+
                     .anyRequest().authenticated();
             })
             .oauth2ResourceServer((oauth2) -> oauth2

@@ -47,6 +47,12 @@ public class StockController
         return new ResponseEntity<>(this.stockService.findById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/product/{id}")
+    public ResponseEntity<Stock> getByProductId(@PathVariable Long id)
+    {
+        return new ResponseEntity<>(this.stockService.findByProductId(id), HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Stock> update(@Valid @RequestBody UpdateStockDTO stockUpdate, @PathVariable Long id)
     {

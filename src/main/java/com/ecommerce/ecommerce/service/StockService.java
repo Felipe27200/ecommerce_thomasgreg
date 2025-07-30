@@ -50,11 +50,24 @@ public class StockService
             throw new GeneralException("The product id must be greater than zero");
 
         Optional<Stock> stock = this.stockRepository.findById(id);
-        
+
         if (stock.isEmpty())
             throw new NotFoundException("Stock with id " + id + " not found");
 
         return stock.get();
+    }
+
+    public Stock findByProductId(Long id)
+    {
+        if (id == null || id <= 0L)
+            throw new GeneralException("The product id must be greater than zero");
+
+        Stock stock = this.stockRepository.findByProductId(id);
+
+        if (stock == null)
+            throw new NotFoundException("Stock with id " + id + " not found");
+
+        return stock;
     }
 
     public List<Stock> findAll()
