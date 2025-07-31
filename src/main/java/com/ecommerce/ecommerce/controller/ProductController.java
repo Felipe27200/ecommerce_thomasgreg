@@ -54,12 +54,24 @@ public class ProductController
         return new ResponseEntity<>(this.productService.findAll(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<BasicResponse> delete(@PathVariable Long id)
+    @GetMapping("/find-active")
+    public ResponseEntity<List<Product>> getAllActiveProducts()
     {
-        String result = this.productService.deleteById(id);
+        return new ResponseEntity<>(this.productService.findByIsActive(true), HttpStatus.OK);
+    }
 
-        BasicResponse basicResponse = new BasicResponse("successful", "The product with name '" + result + "' was deleted successfully");
+    @PutMapping("/change-state/{id}")
+    public ResponseEntity<BasicResponse> changeState(@PathVariable Long id)
+    {
+        Product product = this.productService.findById(id);
+
+        product.setActive(!product.isActive());
+
+        product = this.productService.update(product, id);
+
+        BasicResponse basicResponse = new BasicResponse("successful", "The product with name '"
+                + product.getName() + "' has been changed successfully to "
+                + (product.isActive() ? "active" : "inactive") + ".");
 
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);
     }

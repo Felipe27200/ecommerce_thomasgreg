@@ -88,4 +88,9 @@ public class ProductService
     {
         return this.productRepository.findByName(name);
     }
+
+    public List<Product> findByIsActive(boolean isActive)
+    {
+        return this.productRepository.findByIsActive(isActive);
+    }
 }

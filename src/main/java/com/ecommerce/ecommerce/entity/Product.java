@@ -25,6 +25,9 @@ public class Product
     @Column(nullable = false)
     private BigDecimal price;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
+
     public Product() {
     }
 
@@ -60,5 +63,13 @@ public class Product
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

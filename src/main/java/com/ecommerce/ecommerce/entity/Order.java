@@ -2,6 +2,7 @@ package com.ecommerce.ecommerce.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -14,13 +15,19 @@ public class Order
     private long orderId;
 
     @Column(name = "quantity", nullable = false)
-    private int quantity;
+    private Integer quantity;
 
     @Column(name = "order_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private LocalDate orderDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    private BigDecimal total;
+
+    @Column(nullable = true)
+    private BigDecimal discount;
+
+    @ManyToOne()
     @JoinColumn(
         name = "product_id",
         referencedColumnName = "product_id",
@@ -28,7 +35,7 @@ public class Order
     )
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(
             name = "user_id",
             referencedColumnName = "user_id",
@@ -39,12 +46,30 @@ public class Order
     public Order() {
     }
 
-    public Order(long orderId, int quantity, LocalDate orderDate, Product product, User user) {
+    public Order(long orderId, Integer quantity, LocalDate orderDate, BigDecimal total, BigDecimal discount, Product product, User user) {
         this.orderId = orderId;
         this.quantity = quantity;
         this.orderDate = orderDate;
+        this.total = total;
+        this.discount = discount;
         this.product = product;
         this.user = user;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
     }
 
     public long getOrderId() {
@@ -55,11 +80,11 @@ public class Order
         this.orderId = orderId;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
