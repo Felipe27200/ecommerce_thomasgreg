@@ -4,9 +4,13 @@ import com.ecommerce.ecommerce.dto.stock.CreateStockDTO;
 import com.ecommerce.ecommerce.dto.stock.UpdateStockDTO;
 import com.ecommerce.ecommerce.entity.Product;
 import com.ecommerce.ecommerce.entity.Stock;
+import com.ecommerce.ecommerce.enums.audit.Action;
+import com.ecommerce.ecommerce.enums.audit.Entity;
+import com.ecommerce.ecommerce.service.AuditService;
 import com.ecommerce.ecommerce.service.ProductService;
 import com.ecommerce.ecommerce.service.StockService;
 
+import com.ecommerce.ecommerce.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,11 +25,15 @@ public class StockController
 {
     private final ProductService productService;
     private final StockService stockService;
+    private final UserService userService;
+    private final AuditService auditService;
 
     @Autowired
-    public StockController(ProductService productService, StockService stockService) {
+    public StockController(ProductService productService, StockService stockService, UserService userService, AuditService auditService) {
         this.productService = productService;
         this.stockService = stockService;
+        this.userService = userService;
+        this.auditService = auditService;
     }
 
     @PostMapping("/create")
@@ -38,7 +46,11 @@ public class StockController
     	
     	newStock.setProduct(product);
 
-        return new ResponseEntity<>(this.stockService.save(newStock), HttpStatus.OK);
+        newStock = this.stockService.save(newStock);
+
+        auditService.create(Action.CREATE, Entity.STOCK, newStock.getId(), userService.findByUsername(userService.getAuthUsername()));
+
+        return new ResponseEntity<>(newStock, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -60,7 +72,11 @@ public class StockController
 
         stock.setAvailableQuantity(stockUpdate.getAvailableQuantity());
 
-        return new ResponseEntity<>(this.stockService.update(stock, id), HttpStatus.OK);
+        stock =  this.stockService.update(stock, id);
+
+        auditService.create(Action.UPDATE, Entity.STOCK, stock.getId(), userService.findByUsername(userService.getAuthUsername()));
+
+        return new ResponseEntity<>(stock, HttpStatus.OK);
     }
 
     @GetMapping("/")

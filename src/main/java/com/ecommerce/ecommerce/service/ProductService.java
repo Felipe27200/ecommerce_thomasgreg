@@ -18,8 +18,7 @@ public class ProductService
     private ProductRepository productRepository;
 
     @Autowired
-    public void setProductRepository(ProductRepository productRepository)
-    {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

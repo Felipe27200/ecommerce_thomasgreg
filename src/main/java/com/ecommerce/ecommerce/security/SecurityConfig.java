@@ -86,6 +86,7 @@ public class SecurityConfig
                     .requestMatchers(HttpMethod.POST, "/api/products/create").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/api/products/change-state/{id}").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/api/products/{id}").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/api/products/").hasRole("ADMIN")
 
                     .requestMatchers(HttpMethod.POST, "/api/stocks/create").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/api/stocks/{id}").hasRole("ADMIN")

@@ -3,9 +3,14 @@ package com.ecommerce.ecommerce.controller;
 import com.ecommerce.ecommerce.dto.order.CreateOrderDTO;
 import com.ecommerce.ecommerce.entity.Order;
 import com.ecommerce.ecommerce.entity.Product;
+import com.ecommerce.ecommerce.entity.User;
+import com.ecommerce.ecommerce.enums.audit.Action;
+import com.ecommerce.ecommerce.enums.audit.Entity;
 import com.ecommerce.ecommerce.error_handling.exception.GeneralException;
+import com.ecommerce.ecommerce.service.AuditService;
 import com.ecommerce.ecommerce.service.OrderService;
 import com.ecommerce.ecommerce.service.ProductService;
+import com.ecommerce.ecommerce.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,11 +30,15 @@ public class OrderController
 {
     private final OrderService orderService;
     private final ProductService productService;
+    private final AuditService auditService;
+    private final UserService userService;
 
     @Autowired
-    public OrderController(OrderService orderService, ProductService productService) {
+    public OrderController(OrderService orderService, ProductService productService, AuditService auditService, UserService userService) {
         this.orderService = orderService;
         this.productService = productService;
+        this.auditService = auditService;
+        this.userService = userService;
     }
 
     @PostMapping("/")
@@ -46,19 +55,11 @@ public class OrderController
         newOrder.setQuantity(createOrderDTO.getQuantity());
         newOrder.setOrderDate(LocalDate.now());
 
-        return new ResponseEntity<>(this.orderService.create(newOrder, this.getAuthUsername()), HttpStatus.OK);
+        User user = this.userService.findByUsername(this.userService.getAuthUsername());
+        Order order = this.orderService.create(newOrder, user.getUsername());
+
+        this.auditService.create(Action.CREATE, Entity.ORDER, order.getOrderId(), user);
+
+        return new ResponseEntity<>(order, HttpStatus.OK);
     }
-
-    private String getAuthUsername()
-    {
-        Authentication authentication = this.getAuthentication();
-
-        return authentication.getName();
-    }
-
-    private Authentication getAuthentication()
-    {
-        return SecurityContextHolder.getContext().getAuthentication();
-    }
-
 }

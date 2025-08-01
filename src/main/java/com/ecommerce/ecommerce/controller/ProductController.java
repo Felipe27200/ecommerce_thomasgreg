@@ -1,9 +1,14 @@
 package com.ecommerce.ecommerce.controller;
 
 import com.ecommerce.ecommerce.entity.Product;
+import com.ecommerce.ecommerce.entity.User;
+import com.ecommerce.ecommerce.enums.audit.Action;
+import com.ecommerce.ecommerce.enums.audit.Entity;
 import com.ecommerce.ecommerce.error_handling.exception.GeneralException;
 import com.ecommerce.ecommerce.response.BasicResponse;
+import com.ecommerce.ecommerce.service.AuditService;
 import com.ecommerce.ecommerce.service.ProductService;
+import com.ecommerce.ecommerce.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +22,15 @@ import java.util.List;
 @RequestMapping("${apiPrefix}/products")
 public class ProductController
 {
+    private final AuditService auditService;
     private final ProductService productService;
+    private final UserService userService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(AuditService auditService, ProductService productService, UserService userService) {
+        this.auditService = auditService;
         this.productService = productService;
+        this.userService = userService;
     }
 
     @PostMapping("/create")
@@ -30,6 +39,10 @@ public class ProductController
     	this.validateProduct(product);
 
         Product newProduct = this.productService.save(product);
+
+        User user = this.userService.findByUsername(this.userService.getAuthUsername());
+
+        this.auditService.create(Action.CREATE, Entity.PRODUCT, newProduct.getId(), user);
 
         return new ResponseEntity<>(newProduct, HttpStatus.OK);
     }
@@ -45,7 +58,12 @@ public class ProductController
     {
     	this.validateProduct(product);
 
-        return new ResponseEntity<>(this.productService.update(product, id), HttpStatus.OK);
+        Product productUpdate = this.productService.update(product, id);
+
+        User user = this.userService.findByUsername(this.userService.getAuthUsername());
+        this.auditService.create(Action.UPDATE, Entity.PRODUCT, productUpdate.getId(), user);
+
+        return new ResponseEntity<>(productUpdate, HttpStatus.OK);
     }
 
     @GetMapping("/")
@@ -68,6 +86,9 @@ public class ProductController
         product.setActive(!product.isActive());
 
         product = this.productService.update(product, id);
+
+        User user = this.userService.findByUsername(this.userService.getAuthUsername());
+        this.auditService.create(Action.CHANGE_STATE, Entity.PRODUCT, product.getId(), user);
 
         BasicResponse basicResponse = new BasicResponse("successful", "The product with name '"
                 + product.getName() + "' has been changed successfully to "
