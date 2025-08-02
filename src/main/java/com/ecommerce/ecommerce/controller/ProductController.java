@@ -90,9 +90,9 @@ public class ProductController
         User user = this.userService.findByUsername(this.userService.getAuthUsername());
         this.auditService.create(Action.CHANGE_STATE, Entity.PRODUCT, product.getId(), user);
 
-        BasicResponse basicResponse = new BasicResponse("successful", "The product with name '"
+        BasicResponse basicResponse = new BasicResponse("The product with name '"
                 + product.getName() + "' has been changed successfully to "
-                + (product.isActive() ? "active" : "inactive") + ".");
+                + (product.isActive() ? "active" : "inactive") + ".", "successful");
 
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);
     }
